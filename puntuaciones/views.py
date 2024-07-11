@@ -43,7 +43,7 @@ def partidas_list_create(request):
             raise ValueError
             
         except (ValueError, KeyError):
-            return JsonResponse(data={"message":"Los datos introducidos no son válidos", "status":400},
+            return JsonResponse(data={"message":"Los datos introducidos no son válidos", "status":400, "errors":serializer.errors},
                                 status=400, safe=False)
         
         except:
@@ -467,3 +467,31 @@ def jugadas_details_edit_delete(request,id):
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
                                 status=500, safe=False)
+            
+            
+            
+            
+
+
+
+
+
+
+#PUNTUACIONES GENERALES
+#Esta función devuelve todas las jugadas de un torneo especifico en formato json
+@api_view(['GET'])
+def puntuacionesGenerales(request, id):
+    try:
+        #Obtenemos todas las jugadas y las partidas del torneo elegido.
+        jugadas = Jugada.objects.filter(partida__torneo__id=id)
+        jugadasList = []
+        
+        for jugada in jugadas:
+            jugadasList.append(jugada.json())
+        
+        return JsonResponse(data={"message":jugadasList, "status":200}, status=200, safe=False)
+            
+    except:
+        return JsonResponse(status=500, data={"message":"Ha ocurrido un error inesperado", "status":400})
+        
+    

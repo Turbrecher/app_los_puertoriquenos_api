@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import partidas_list_create, partidas_details_edit_delete, jugadores_list_create, jugadores_details_edit_delete, torneos_list_create, torneos_details_edit_delete, jugadas_details_edit_delete, jugadas_list_create
+from .views import partidas_list_create, partidas_details_edit_delete, jugadores_list_create, jugadores_details_edit_delete, torneos_list_create, torneos_details_edit_delete, jugadas_details_edit_delete, jugadas_list_create, puntuacionesGenerales
 
 urlpatterns = [
     #PARTIDAS
@@ -18,4 +18,7 @@ urlpatterns = [
     #JUGADAS
     path('jugadas/', view=jugadas_list_create),#listar y crear (GET, POST)
     path('jugadas/<id>', view=jugadas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    
+    #PUNTUACIONES
+    path('puntuaciones/<id>', view=puntuacionesGenerales),#detalles, editar y eliminar (GET, PUT, DELETE)
 ]

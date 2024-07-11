@@ -22,3 +22,25 @@ class Jugada(models.Model):
     puntuacion = models.IntegerField()
     class Meta:
         unique_together= ('jugador','partida',)
+        
+    def json(self):
+        return {
+            "jugador":{
+                "id":self.jugador.id,
+                "nombre":self.jugador.nombre,
+                "apellidos":self.jugador.apellidos,
+                "username":self.jugador.username,
+            },
+            "partida":{
+                "id":self.partida.id,
+                "nombre":self.partida.nombre,
+                "fecha":self.partida.fecha,
+                "torneo":{
+                    "id":self.partida.torneo.id,
+                    "nombre":self.partida.torneo.nombre,
+                    "fechaInicio":self.partida.torneo.fechaInicio,
+                    "fechaFinal":self.partida.torneo.fechaFinal,
+                    },
+            },
+            "puntuacion":self.puntuacion
+        }
