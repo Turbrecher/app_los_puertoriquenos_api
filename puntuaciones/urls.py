@@ -1,12 +1,21 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import listPartidas, getPartida, listJugadores, getJugador, listTorneos, getTorneo
+from .views import partidas_list_create, partidas_details_edit_delete, jugadores_list_create, jugadores_details_edit_delete, torneos_list_create, torneos_details_edit_delete, jugadas_details_edit_delete, jugadas_list_create
 
 urlpatterns = [
-    path('partidas/', view=listPartidas),
-    path('partidas/<id>', view=getPartida),
-    path('jugadores/', view=listJugadores),
-    path('jugadores/<id>', view=getJugador),
-    path('torneos/', view=listTorneos),
-    path('torneos/<id>', view=getTorneo)
+    #PARTIDAS
+    path('partidas/', view=partidas_list_create),#listar y crear (GET, POST)
+    path('partidas/<id>', view=partidas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    
+    #JUGADORES
+    path('jugadores/', view=jugadores_list_create),#listar y crear (GET, POST)
+    path('jugadores/<id>', view=jugadores_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    
+    #TORNEOS
+    path('torneos/', view=torneos_list_create),#listar y crear (GET, POST)
+    path('torneos/<id>', view=torneos_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    
+    #JUGADAS
+    path('jugadas/', view=jugadas_list_create),#listar y crear (GET, POST)
+    path('jugadas/<id>', view=jugadas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
 ]

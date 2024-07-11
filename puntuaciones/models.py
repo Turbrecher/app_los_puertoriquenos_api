@@ -19,4 +19,6 @@ class Partida(models.Model):
 class Jugada(models.Model):
     jugador = models.ForeignKey(to=Jugador, on_delete=models.CASCADE)
     partida = models.ForeignKey(to=Partida, on_delete=models.CASCADE)
-    puntacion = models.IntegerField()
+    puntuacion = models.IntegerField()
+    class Meta:
+        unique_together= ('jugador','partida',)

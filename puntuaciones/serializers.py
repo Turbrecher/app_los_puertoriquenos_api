@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Jugador, Partida, Torneo
+from .models import Jugador, Partida, Torneo, Jugada
 
 class JugadorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,4 +15,22 @@ class PartidaSerializer(serializers.ModelSerializer):
     torneo = TorneoSerializer()
     class Meta:
         model = Partida
+        fields = serializers.ALL_FIELDS
+        
+class PartidaPOSTSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Partida
+        fields = serializers.ALL_FIELDS
+        
+class JugadaSerializer(serializers.ModelSerializer):
+    jugador = JugadorSerializer()
+    partida = PartidaSerializer()
+    
+    class Meta:
+        model = Jugada
+        fields = serializers.ALL_FIELDS
+        
+class JugadaPOSTSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jugada
         fields = serializers.ALL_FIELDS
