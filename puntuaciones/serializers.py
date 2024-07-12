@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Jugador, Partida, Torneo, Jugada
+from django.contrib.auth.models import User
 
 class JugadorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,3 +35,8 @@ class JugadaPOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Jugada
         fields = serializers.ALL_FIELDS
+        
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'password', 'is_superuser']

@@ -1,16 +1,15 @@
+import pprint
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from .models import Partida, Jugador, Torneo, Jugada
-from .serializers import PartidaSerializer, PartidaPOSTSerializer, JugadorSerializer, TorneoSerializer, JugadaSerializer, JugadaPOSTSerializer
-from rest_framework.decorators import api_view
+from .serializers import PartidaSerializer, PartidaPOSTSerializer, JugadorSerializer, TorneoSerializer, JugadaSerializer, JugadaPOSTSerializer, UserSerializer
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
 
-
-
-
-
-
-
-
+from django.contrib.auth.models import User
 
 
 #PARTIDAS
@@ -33,6 +32,9 @@ def partidas_list_create(request):
     #creacion 
     if request.method == 'POST':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             partida = Partida(None, request.data['nombre'].upper(), request.data['fecha'].upper(), request.data['torneo'])
             serializer = PartidaPOSTSerializer(data=request.data,many=False)
             
@@ -45,6 +47,9 @@ def partidas_list_create(request):
         except (ValueError, KeyError):
             return JsonResponse(data={"message":"Los datos introducidos no son válidos", "status":400, "errors":serializer.errors},
                                 status=400, safe=False)
+        
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
         
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -74,10 +79,12 @@ def partidas_details_edit_delete(request, id):
         except:
             return JsonResponse({"message":"Ha ocurrido un error inesperado", "status":500}, safe=False)
         
-    
     #edicion
     if request.method == 'PUT':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             partida = Partida.objects.get(id = id)
             serializer = PartidaPOSTSerializer(data=request.data,many=False, instance=partida)
             
@@ -98,6 +105,9 @@ def partidas_details_edit_delete(request, id):
             return JsonResponse(data={"message":"La partida que intentas editar no existe", "status":404},
                                 status=404, safe=False)
         
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+        
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
                                 status=500, safe=False)
@@ -105,6 +115,10 @@ def partidas_details_edit_delete(request, id):
     #borrado
     if request.method == 'DELETE':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
+            
             partida = Partida.objects.get(id=id)
             print(partida)
             
@@ -117,6 +131,9 @@ def partidas_details_edit_delete(request, id):
         except Partida.DoesNotExist:   
             return JsonResponse(data={"message":"La partida que intentas borrar no existe", "status":404},
                                 status=404, safe=False)
+         
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
          
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -151,6 +168,9 @@ def jugadores_list_create(request):
     #creacion 
     if request.method == 'POST':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             jugador = Jugador(None, request.data['nombre'].upper(), request.data['apellidos'].upper(), request.data['username'].upper())
             serializer = JugadorSerializer(data=request.data,many=False)
             
@@ -163,6 +183,9 @@ def jugadores_list_create(request):
         except (ValueError, KeyError):
             return JsonResponse(data={"message":"Los datos introducidos no son válidos", "status":400},
                                 status=400, safe=False)
+        
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
         
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -195,6 +218,10 @@ def jugadores_details_edit_delete(request,id):
     #edicion
     if request.method == 'PUT':
         try:
+            
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             jugador = Jugador.objects.get(id = id)
             serializer = JugadorSerializer(data=request.data,many=False)
             
@@ -215,6 +242,9 @@ def jugadores_details_edit_delete(request,id):
             return JsonResponse(data={"message":"El jugador que intentas editar no existe", "status":404},
                                 status=404, safe=False)
         
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+        
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
                                 status=500, safe=False)
@@ -222,6 +252,10 @@ def jugadores_details_edit_delete(request,id):
     #borrado
     if request.method == 'DELETE':
         try:
+            
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             jugador = Jugador.objects.get(id=id)
             
             if jugador:
@@ -233,6 +267,9 @@ def jugadores_details_edit_delete(request,id):
         except Partida.DoesNotExist:   
             return JsonResponse(data={"message":"El jugador que intentas borrar no existe", "status":404},
                                 status=404, safe=False)
+         
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
          
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -268,6 +305,9 @@ def torneos_list_create(request):
     #creacion 
     if request.method == 'POST':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             torneo = Torneo(None, request.data['nombre'].upper(), request.data['fechaInicio'].upper(), request.data['fechaFinal'].upper())
             serializer = TorneoSerializer(data=request.data,many=False)
             
@@ -280,6 +320,9 @@ def torneos_list_create(request):
         except (ValueError, KeyError):
             return JsonResponse(data={"message":"Los datos introducidos no son válidos", "status":400},
                                 status=400, safe=False)
+        
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
         
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -310,6 +353,9 @@ def torneos_details_edit_delete(request,id):
     #edicion
     if request.method == 'PUT':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             torneo = Torneo.objects.get(id = id)
             serializer = TorneoSerializer(data=request.data,many=False)
             
@@ -330,6 +376,9 @@ def torneos_details_edit_delete(request,id):
             return JsonResponse(data={"message":"El torneo que intentas editar no existe", "status":404},
                                 status=404, safe=False)
         
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+        
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
                                 status=500, safe=False)
@@ -337,6 +386,9 @@ def torneos_details_edit_delete(request,id):
     #borrado
     if request.method == 'DELETE':
         try:
+            if(not request.user.is_authenticated or not request.user.is_superuser):
+                raise PermissionError
+            
             torneo = Torneo.objects.get(id=id)
             
             if torneo:
@@ -348,6 +400,9 @@ def torneos_details_edit_delete(request,id):
         except Torneo.DoesNotExist:   
             return JsonResponse(data={"message":"El torneo que intentas borrar no existe", "status":404},
                                 status=404, safe=False)
+         
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
          
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -382,10 +437,12 @@ def jugadas_list_create(request):
     #creacion 
     if request.method == 'POST':
         try:
+            if not request.user.is_authenticated or not request.user.is_superuser:
+                raise PermissionError
+            
             jugada = Jugada(None, request.data['jugador'], request.data['partida'], request.data['puntuacion'])
             serializer = JugadaPOSTSerializer(data=request.data,many=False)
-            
-            
+                
             if serializer.is_valid():
                 jugada.save()
                 return JsonResponse({"message":"La jugada se ha creado exitosamente", "status":200}, status=200, safe=False)
@@ -395,6 +452,9 @@ def jugadas_list_create(request):
         except (ValueError, KeyError):
             return JsonResponse(data={"message":"Los datos introducidos no son válidos", "status":400},
                                 status=400, safe=False)
+        
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
         
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -425,6 +485,11 @@ def jugadas_details_edit_delete(request,id):
     #edicion
     if request.method == 'PUT':
         try:
+            if not request.user.is_authenticated or not request.user.is_superuser:
+                raise PermissionError
+            
+            
+            
             jugada = Jugada.objects.get(id = id)
             serializer = JugadaPOSTSerializer(data=request.data,many=False,instance=jugada)
             
@@ -444,6 +509,9 @@ def jugadas_details_edit_delete(request,id):
         except Jugada.DoesNotExist:
             return JsonResponse(data={"message":"La jugada que intentas editar no existe", "status":404},
                                 status=404, safe=False)
+            
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
         
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
@@ -452,6 +520,10 @@ def jugadas_details_edit_delete(request,id):
     #borrado
     if request.method == 'DELETE':
         try:
+            if not request.user.is_authenticated or not request.user.is_superuser:
+                raise PermissionError
+            
+            
             jugada = Jugada.objects.get(id=id)
             
             if jugada:
@@ -464,34 +536,132 @@ def jugadas_details_edit_delete(request,id):
             return JsonResponse(data={"message":"La jugada que intentas borrar no existe", "status":404},
                                 status=404, safe=False)
          
+        except PermissionError:
+            return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+         
         except:
             return JsonResponse(data={"message":"Error inesperado", "status":500},
                                 status=500, safe=False)
             
+        
             
             
             
+            
 
 
 
 
 
 
-#PUNTUACIONES GENERALES
+#PUNTUACIONES TORNEO POR JUGADOR
 #Esta función devuelve todas las jugadas de un torneo especifico en formato json
 @api_view(['GET'])
-def puntuacionesGenerales(request, id):
+def puntuacionesTorneo(request, idTorneo):
     try:
-        #Obtenemos todas las jugadas y las partidas del torneo elegido.
-        jugadas = Jugada.objects.filter(partida__torneo__id=id)
+        val = int(idTorneo)
+        #Consulta que obtiene la puntuacion de un jugador en un torneo completo, {username:username, puntuacion:puntuacion, status:status}
+        jugadas = Jugada.objects.raw("""SELECT JUGADOR.ID, USERNAME, SUM(PUNTUACION) as puntuacion, TORNEO_ID FROM PUNTUACIONES_JUGADA AS JUGADA 
+        INNER JOIN puntuaciones_partida AS PARTIDA ON JUGADA.PARTIDA_ID=PARTIDA.ID
+        INNER JOIN puntuaciones_jugador AS JUGADOR ON JUGADA.JUGADOR_ID=JUGADOR.ID
+        WHERE PARTIDA.TORNEO_ID= %s group by username;""", [idTorneo])
+        jugadasLista = []
+        
+        for jugada in jugadas:
+            jugadasLista.append({"username":jugada.username, "puntuacion":jugada.puntuacion})
+        
+        return JsonResponse({"data":jugadasLista, "status":200}, status = 200, safe=False)
+       
+    except ValueError:
+        return JsonResponse(status=400, data={"message":"Solo puedes filtrar por id numérica", "status":400})
+         
+    except:
+        return JsonResponse(status=500, data={"message":"Ha ocurrido un error inesperado", "status":500})
+    
+    
+    
+#PUNTUACIONES PARTIDA
+#Esta función devuelve todas las jugadas de un torneo especifico en formato json
+@api_view(['GET'])
+def puntuacionesPartida(request, idPartida):
+    try:
+        val = int(idPartida)
+        jugadas = Jugada.objects.filter(partida__id=idPartida)
         jugadasList = []
         
         for jugada in jugadas:
+            print(jugada)
             jugadasList.append(jugada.json())
         
         return JsonResponse(data={"message":jugadasList, "status":200}, status=200, safe=False)
-            
+       
+    except ValueError:
+        return JsonResponse(status=400, data={"message":"Solo puedes filtrar por id numérica", "status":400})
+         
     except:
-        return JsonResponse(status=500, data={"message":"Ha ocurrido un error inesperado", "status":400})
+        return JsonResponse(status=500, data={"message":"Ha ocurrido un error inesperado", "status":500})
         
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+@api_view(['POST'])
+def login(request):
+    
+    try:
+        user = get_object_or_404(User, username = request.data['username'].upper())
+        
+        if not user.check_password(request.data['password']):
+            return JsonResponse({"error":"Contraseña no válida", "status":400}, status=400)
+        
+        token, created = Token.objects.get_or_create(user=user)
+        serializer = UserSerializer(instance=user)
+            
+        return JsonResponse({"message":"Te has autenticado correctamente","token": token.key ,"user":serializer.data, "status":200}, status=200)
+    except KeyError:
+        return JsonResponse({"error":"Debes ingresar un usuario y una contraseña", "status":400}, status=400)
+
+
+@api_view(['POST'])
+def register(request):
+    serializer = UserSerializer(data = request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        
+        user = User.objects.get(username=serializer.data['username'])
+        user.set_password(serializer.data['password'])
+        user.username = user.username.upper()
+        user.save()
+        
+        token = Token.objects.create(user=user)
+        return JsonResponse({"user":serializer.data,"token":token.key,"data":None, "status":200}, status=200)
+    
+    return JsonResponse({"message":"Ha ocurrido un error", "status":400, "errors":serializer.errors})
+
+
+
+permission_classes([IsAuthenticated])
+authentication_classes([TokenAuthentication])
+@api_view(['POST'])
+def profile(request):
+    try:
+        if not request.user.is_authenticated or not request.user.is_superuser:
+            raise PermissionError
+        
+        serializer = UserSerializer(instance=request.user)
+        
+        return JsonResponse( {"message":"Este es tu perfil","data":serializer.data}, status=200)
+    
+    except PermissionError:
+        return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+    
     

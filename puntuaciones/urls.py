@@ -1,24 +1,31 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import partidas_list_create, partidas_details_edit_delete, jugadores_list_create, jugadores_details_edit_delete, torneos_list_create, torneos_details_edit_delete, jugadas_details_edit_delete, jugadas_list_create, puntuacionesGenerales
+from . import views
 
 urlpatterns = [
     #PARTIDAS
-    path('partidas/', view=partidas_list_create),#listar y crear (GET, POST)
-    path('partidas/<id>', view=partidas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    path('partidas/', views.partidas_list_create),#listar y crear (GET, POST)
+    path('partidas/<id>', views.partidas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
     
     #JUGADORES
-    path('jugadores/', view=jugadores_list_create),#listar y crear (GET, POST)
-    path('jugadores/<id>', view=jugadores_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    path('jugadores/', views.jugadores_list_create),#listar y crear (GET, POST)
+    path('jugadores/<id>', views.jugadores_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
     
     #TORNEOS
-    path('torneos/', view=torneos_list_create),#listar y crear (GET, POST)
-    path('torneos/<id>', view=torneos_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    path('torneos/', views.torneos_list_create),#listar y crear (GET, POST)
+    path('torneos/<id>', views.torneos_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
     
     #JUGADAS
-    path('jugadas/', view=jugadas_list_create),#listar y crear (GET, POST)
-    path('jugadas/<id>', view=jugadas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
+    path('jugadas/', views.jugadas_list_create),#listar y crear (GET, POST)
+    path('jugadas/<id>', views.jugadas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
     
     #PUNTUACIONES
-    path('puntuaciones/<id>', view=puntuacionesGenerales),#detalles, editar y eliminar (GET, PUT, DELETE)
+    path('puntuacionestorneo/<idTorneo>', views.puntuacionesTorneo),#detalles, editar y eliminar (GET, PUT, DELETE)
+    path('puntuacionespartida/<idPartida>', views.puntuacionesPartida),#detalles, editar y eliminar (GET, PUT, DELETE)
+    
+    #AUTENTICACION
+    path('login', views.login),#login
+    path('register', views.register),#register
+    path('profile', views.profile),#profile
+    
 ]
