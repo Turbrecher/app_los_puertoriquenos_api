@@ -523,7 +523,6 @@ def jugadas_details_edit_delete(request,id):
             if not request.user.is_authenticated or not request.user.is_superuser:
                 raise PermissionError
             
-            
             jugada = Jugada.objects.get(id=id)
             
             if jugada:
