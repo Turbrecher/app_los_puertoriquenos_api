@@ -40,7 +40,7 @@ def partidas_list_create(request):
             
             if serializer.is_valid():
                 partida.save()
-                return JsonResponse({"message":"La partida se ha creado exitosamente", "status":200}, status=200, safe=False)
+                return JsonResponse({"message":"La partida se ha creado exitosamente", "status":200, "partida":serializer.data, "id_partida":partida.id}, status=200, safe=False)
             
             raise ValueError
             
