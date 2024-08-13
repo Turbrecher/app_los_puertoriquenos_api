@@ -591,14 +591,14 @@ def puntuacionesTorneo(request, idTorneo):
 def puntuacionesPartida(request, idPartida):
     try:
         val = int(idPartida)
-        jugadas = Jugada.objects.filter(partida__id=idPartida)
+        jugadas = Jugada.objects.filter(partida__id=idPartida).order_by('-puntuacion')
         jugadasList = []
         
         for jugada in jugadas:
             print(jugada)
             jugadasList.append(jugada.json())
         
-        return JsonResponse(data={"message":jugadasList, "status":200}, status=200, safe=False)
+        return JsonResponse(data={"data":jugadasList, "status":200}, status=200, safe=False)
        
     except ValueError:
         return JsonResponse(status=400, data={"message":"Solo puedes filtrar por id numérica", "status":400})

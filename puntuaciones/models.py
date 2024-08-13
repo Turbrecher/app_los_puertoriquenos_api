@@ -25,6 +25,12 @@ class Jugada(models.Model):
         
     def json(self):
         return {
+            "username":self.jugador.username,
+            "puntuacion":self.puntuacion
+        }
+        
+    def json2(self):
+        return {
             "jugador":{
                 "id":self.jugador.id,
                 "nombre":self.jugador.nombre,
