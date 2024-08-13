@@ -22,8 +22,14 @@ def partidas_list_create(request):
     
     #lista
     if request.method == 'GET':
+
         try:
             partidas = PartidaSerializer(Partida.objects.all(), many=True)
+            
+            #Si el usuario quiere filtrar por torneo
+            if request.GET.get('torneo'):
+                partidas = PartidaSerializer(Partida.objects.filter(torneo__id=request.GET['torneo']), many=True)
+               
             return JsonResponse(partidas.data, safe=False)
     
         except:
@@ -563,7 +569,7 @@ def puntuacionesTorneo(request, idTorneo):
         jugadas = Jugada.objects.raw("""SELECT JUGADOR.ID, USERNAME, SUM(PUNTUACION) as puntuacion, TORNEO_ID FROM PUNTUACIONES_JUGADA AS JUGADA 
         INNER JOIN puntuaciones_partida AS PARTIDA ON JUGADA.PARTIDA_ID=PARTIDA.ID
         INNER JOIN puntuaciones_jugador AS JUGADOR ON JUGADA.JUGADOR_ID=JUGADOR.ID
-        WHERE PARTIDA.TORNEO_ID= %s group by username;""", [idTorneo])
+        WHERE PARTIDA.TORNEO_ID= %s group by username order by puntuacion desc;""", [idTorneo])
         jugadasLista = []
         
         for jugada in jugadas:
