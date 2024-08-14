@@ -717,8 +717,6 @@ def register(request):
 
 
 
-permission_classes([IsAuthenticated])
-authentication_classes([TokenAuthentication])
 @api_view(['POST'])
 def profile(request):
     try:
@@ -733,3 +731,49 @@ def profile(request):
         return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
     
     
+
+@api_view(['POST'])
+def edit_profile(request):
+    try:
+        if not request.user.is_authenticated:
+            raise PermissionError
+        
+        print(request.data)
+        
+        usuario = User.objects.get(id=request.user.id)
+        serializer = UserSerializer(data=request.data, instance = usuario)     
+            
+        
+        if serializer.is_valid():
+            usuario.username = request.data['username'].upper()
+            usuario.email = request.data['email'].upper()
+            
+            #Si no se cambia la contraseña.
+            if request.data['password'] == request.user.password:
+                usuario.password = usuario.password
+            else:#En caso de establecer una nueva contraseña.
+                usuario.set_password(request.data['password'])
+            
+            usuario.save()
+            
+            return JsonResponse({"message":"¡Tu perfil ha sido editado con éxito!"}, status = 200)
+        
+        return JsonResponse( {"message":"Ha ocurrido un error", "errors":serializer.errors}, status = 400)
+    
+    except PermissionError:
+        return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+    
+    
+@api_view(['POST'])
+def delete_user(request):
+    try:
+        if not request.user.is_authenticated:
+            raise PermissionError
+        
+        usuario = User.objects.get(id=request.user.id)
+        usuario.delete()
+               
+        return JsonResponse({"message":"¡Tu usuario ha sido ELIMINADO con éxito!"}, status = 200)
+    
+    except PermissionError:
+        return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)

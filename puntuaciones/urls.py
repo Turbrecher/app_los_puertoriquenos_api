@@ -27,5 +27,8 @@ urlpatterns = [
     path('login', views.login),#login
     path('register', views.register),#register
     path('profile', views.profile),#profile
+    path('editprofile', views.edit_profile),#edit profile
+    path('deleteuser', views.delete_user),#edit profile
+    
     
 ]
