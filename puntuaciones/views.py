@@ -627,6 +627,9 @@ def login(request):
         if not user.check_password(request.data['password']):
             return JsonResponse({"error":"Contraseña no válida", "status":400}, status=400)
         
+        if not user.is_superuser:
+            return JsonResponse({"error":"No tienes permisos suficientes", "status":401}, status=401)
+        
         token, created = Token.objects.get_or_create(user=user)
         serializer = UserSerializer(instance=user)
             
