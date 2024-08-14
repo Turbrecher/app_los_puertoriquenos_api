@@ -1,15 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Jugador(models.Model):
     nombre = models.TextField()
     apellidos = models.TextField()
     username = models.TextField()
+    usuario = models.ForeignKey(to=User, on_delete=models.CASCADE)
     
 class Torneo(models.Model):
     nombre = models.TextField()
     fechaInicio = models.DateField()
     fechaFinal = models.DateField()
+    usuario = models.ForeignKey(to=User, on_delete=models.CASCADE)
     
 class Partida(models.Model):
     nombre = models.TextField()
