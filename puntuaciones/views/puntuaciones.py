@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from puntuaciones.models import Jugada
 from rest_framework.decorators import api_view
-
+from django.db.models import Avg, Sum
     
 
 
@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 def puntuacionesTorneo(request, idTorneo):
     try:
         
-        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).order_by('-puntuacion')
+        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).values("jugador_username").annotate(Sum("puntuacion")).order_by('-puntuacion')
         jugadasLista = []
         
         for jugada in jugadas:
