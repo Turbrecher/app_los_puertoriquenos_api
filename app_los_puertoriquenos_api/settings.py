@@ -102,6 +102,7 @@ DB_PORT = os.getenv("DB_PORT", 5432)
 
 DATABASES =     {
     'default': dj_database_url.config(
+        default='postgres://'+{DB_USER}+':'+{DB_PASSWORD}+'@'+{DB_HOST}+'/'+{DB_NAME},
         conn_max_age=600
         )
     }
