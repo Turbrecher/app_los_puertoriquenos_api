@@ -764,7 +764,7 @@ def edit_profile(request):
         return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
     
     
-@api_view(['POST'])
+@api_view(['DELETE'])
 def delete_user(request):
     try:
         if not request.user.is_authenticated:
@@ -777,3 +777,17 @@ def delete_user(request):
     
     except PermissionError:
         return JsonResponse({"message":"Debes identificarte para acceder a este recurso", "status":401}, status=401)
+    
+@api_view(['GET'])
+def get_user_name(request, id):
+    try:
+        
+        usuario = User.objects.get(id=id)
+                  
+        return JsonResponse({"usuario":usuario.username}, status = 200)
+    
+    except User.DoesNotExist:
+        return JsonResponse({"message":"El usuario que buscas no existe"}, status=404)
+    
+    except:
+        return JsonResponse({"message":"No hemos podido encontrar tu usuario"}, status=500)

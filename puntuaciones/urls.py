@@ -28,7 +28,8 @@ urlpatterns = [
     path('register', views.register),#register
     path('profile', views.profile),#profile
     path('editprofile', views.edit_profile),#edit profile
-    path('deleteuser', views.delete_user),#edit profile
+    path('deleteuser', views.delete_user),#delete profile
+    path('getusername/<id>', views.get_user_name),#get username
     
     
 ]
