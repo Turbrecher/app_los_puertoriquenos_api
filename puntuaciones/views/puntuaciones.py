@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 def puntuacionesTorneo(request, idTorneo):
     try:
         
-        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).values('jugador__username',"puntuacion").order_by('-puntuacion')
+        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).order_by('-puntuacion')
         jugadasLista = []
         
         for jugada in jugadas:
