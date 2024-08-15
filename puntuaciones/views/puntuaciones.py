@@ -16,6 +16,8 @@ def puntuacionesTorneo(request, idTorneo):
         INNER JOIN puntuaciones_partida AS PARTIDA ON JUGADA.PARTIDA_ID=PARTIDA.ID
         INNER JOIN puntuaciones_jugador AS JUGADOR ON JUGADA.JUGADOR_ID=JUGADOR.ID
         WHERE PARTIDA.TORNEO_ID= %s group by username order by puntuacion desc;""", [idTorneo])
+        
+        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).values('username').order_by('-puntuacion')
         jugadasLista = []
         
         for jugada in jugadas:
