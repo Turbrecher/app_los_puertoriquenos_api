@@ -16,7 +16,7 @@ def puntuacionesTorneo(request, idTorneo):
         
         for jugada in jugadas:
             print(jugada)
-            jugadasLista.append(jugada.json())
+            jugadasLista.append(jugada)
         
         return JsonResponse(data={"data":jugadasLista, "status":200}, status=200, safe=False)
        
