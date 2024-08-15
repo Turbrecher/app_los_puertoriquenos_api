@@ -11,7 +11,7 @@ from django.db.models import Avg, Sum
 def puntuacionesTorneo(request, idTorneo):
     try:
         
-        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).values("jugador_username").annotate(Sum("puntuacion")).order_by('-puntuacion')
+        jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).values("jugador__username").annotate(Sum("puntuacion")).order_by('-puntuacion')
         jugadasLista = []
         
         for jugada in jugadas:
