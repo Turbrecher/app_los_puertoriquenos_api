@@ -90,19 +90,8 @@ WSGI_APPLICATION = 'app_los_puertoriquenos_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DB_NAME = os.getenv("DB_NAME", "lospuertoriquenos_m3ua")
-DB_USER = os.getenv("DB_USER", "usuario")
-DB_HOST = os.getenv("DB_HOST", "dpg-cqv162bv2p9s73e9ve3g-a.frankfurt-postgres.render.com")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "05eLx9AaFsgmFYU59YLk1YPoA9sPKNhz")
-DB_PORT = os.getenv("DB_PORT", 5432)
-
-#DATABASES = {
-#    'default': dj_database_url.parse(f'postgres://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}')
-#}
-
 DATABASES =     {
     'default': dj_database_url.config(
-        default='postgres://usuario:05eLx9AaFsgmFYU59YLk1YPoA9sPKNhz@dpg-cqv162bv2p9s73e9ve3g-a.frankfurt-postgres.render.com:5432/lospuertoriquenos_m3ua',
         conn_max_age=600
         )
     }
