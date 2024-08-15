@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-&%#p-6hczbf8z6g%@x=@@^29p&+2s7)=25(!@2+8by3@hgj$qe
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","localhost", "https://app-los-puertoriquenos.onrender.com"]
+ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 
