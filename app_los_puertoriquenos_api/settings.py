@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'app_los_puertoriquenos_api.wsgi.application'
 
 DATABASES =     {
     'default': dj_database_url.config(
-        default='postgresql://lospuertoriquenos_user:qTmi3ZxOAE5yAZxcjaOmY15v2TYZczsm@dpg-cqv0cubv2p9s73e9dcog-a/lospuertoriquenos',
+        default='postgresql://usuario:05eLx9AaFsgmFYU59YLk1YPoA9sPKNhz@dpg-cqv162bv2p9s73e9ve3g-a/lospuertoriquenos_m3ua',
         conn_max_age=600
         )
     }
