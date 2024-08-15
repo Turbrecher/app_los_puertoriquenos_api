@@ -13,7 +13,7 @@ services:
     startCommand: "python -m gunicorn app_los_puertoriquenos_api.asgi:application -k uvicorn.workers.UvicornWorker"    envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: app_los_puertoriquenos_db
+          name: lospuertoriquenos_DB
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
