@@ -21,9 +21,10 @@ def puntuacionesTorneo(request, idTorneo):
         jugadasLista = []
         
         for jugada in jugadas:
-            jugadasLista.append({"username":jugada.username, "puntuacion":jugada.puntuacion})
+            print(jugada)
+            jugadasLista.append(jugada.json())
         
-        return JsonResponse({"data":jugadasLista, "status":200}, status = 200, safe=False)
+        return JsonResponse(data={"data":jugadasLista, "status":200}, status=200, safe=False)
        
     except ValueError:
         return JsonResponse(status=400, data={"message":"Solo puedes filtrar por id numérica", "status":400})
