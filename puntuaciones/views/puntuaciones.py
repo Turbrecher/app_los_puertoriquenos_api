@@ -10,12 +10,6 @@ from rest_framework.decorators import api_view
 @api_view(['GET'])
 def puntuacionesTorneo(request, idTorneo):
     try:
-        val = int(idTorneo)
-        #Consulta que obtiene la puntuacion de un jugador en un torneo completo, {username:username, puntuacion:puntuacion, status:status}
-        jugadas = Jugada.objects.raw("""SELECT JUGADOR.ID, USERNAME, SUM(PUNTUACION) as puntuacion, TORNEO_ID FROM PUNTUACIONES_JUGADA AS JUGADA 
-        INNER JOIN puntuaciones_partida AS PARTIDA ON JUGADA.PARTIDA_ID=PARTIDA.ID
-        INNER JOIN puntuaciones_jugador AS JUGADOR ON JUGADA.JUGADOR_ID=JUGADOR.ID
-        WHERE PARTIDA.TORNEO_ID= %s group by username order by puntuacion desc;""", [idTorneo])
         
         jugadas = Jugada.objects.filter(partida__torneo__id=idTorneo).values('jugador__username',"puntuacion").order_by('-puntuacion')
         jugadasLista = []
