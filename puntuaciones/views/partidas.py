@@ -162,7 +162,7 @@ def partidas_details_edit_delete(request, id):
 #OBTENER SIGUIENTE ID DISPONIBLE
 @api_view(['GET'])
 def obtenerSiguienteId(request):
-    ultimaPartida = Partida.objects.values("nombre").annotate(maxId=Max("id"))
-    nuevaId = (ultimaPartida[0].get('maxId') + 1)
+    ultimaPartida = Partida.objects.latest('id').id
+    nuevaId = ultimaPartida + 1
     
     return JsonResponse(data = {"nuevaId":nuevaId})
