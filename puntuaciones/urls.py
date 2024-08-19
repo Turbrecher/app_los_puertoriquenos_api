@@ -5,6 +5,7 @@ from puntuaciones.views import authentication, jugadas, jugadores, partidas, tor
 urlpatterns = [
     #PARTIDAS
     path('partidas/', partidas.partidas_list_create),#listar y crear (GET, POST)
+    path('partidas/nuevaid', partidas.obtenerSiguienteId),#siguiente id para nueva partida (GET)
     path('partidas/<id>', partidas.partidas_details_edit_delete),#detalles, editar y eliminar (GET, PUT, DELETE)
     
     #JUGADORES

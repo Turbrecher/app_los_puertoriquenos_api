@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from puntuaciones.serializers import  PartidaSerializer, PartidaPOSTSerializer
 from puntuaciones.models import  Partida, Torneo
 from rest_framework.decorators import api_view
-
+from django.db.models import Avg, Sum, F, Max
 
 
 #LISTAR Y CREAR PARTIDAS.
@@ -159,3 +159,10 @@ def partidas_details_edit_delete(request, id):
                                 status=500, safe=False)
             
             
+#OBTENER SIGUIENTE ID DISPONIBLE
+@api_view(['GET'])
+def obtenerSiguienteId(request):
+    ultimaPartida = Partida.objects.values("nombre").annotate(maxId=Max("id"))
+    nuevaId = (ultimaPartida[0].get('maxId') + 1)
+    
+    return JsonResponse(data = {"nuevaId":nuevaId})
